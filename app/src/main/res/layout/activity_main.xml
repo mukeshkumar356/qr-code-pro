@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@color/background" android:orientation="vertical">
+
+    <!-- Header -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="56dp"
+        android:background="@color/surface" android:gravity="center_vertical" android:paddingStart="16dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="◼ QR Code Pro" android:textColor="@color/accent"
+            android:textSize="20sp" android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- Tabs -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="44dp"
+        android:orientation="horizontal" android:background="@color/surface">
+        <Button android:id="@+id/btnTabGenerate" android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:background="@color/primary" android:text="GENERATE"
+            android:textColor="@color/white" android:textSize="12sp"/>
+        <Button android:id="@+id/btnTabScan" android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:background="@color/surface" android:text="SCAN"
+            android:textColor="@color/accent" android:textSize="12sp"/>
+    </LinearLayout>
+
+    <!-- Generate Layout -->
+    <ScrollView android:id="@+id/layoutGenerate" android:layout_width="match_parent" android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+
+            <EditText android:id="@+id/etQrInput" android:layout_width="match_parent" android:layout_height="80dp"
+                android:hint="Enter text, URL, phone, email..." android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_hint" android:background="@color/surface"
+                android:padding="12dp" android:gravity="top" android:layout_marginBottom="12dp"/>
+
+            <!-- FG colors -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="QR COLOR" android:textColor="@color/text_hint" android:textSize="10sp" android:layout_marginBottom="4dp"/>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginBottom="12dp">
+                <View android:id="@+id/btnFg1" android:layout_width="44dp" android:layout_height="44dp" android:layout_marginEnd="8dp"/>
+                <View android:id="@+id/btnFg2" android:layout_width="44dp" android:layout_height="44dp" android:layout_marginEnd="8dp"/>
+                <View android:id="@+id/btnFg3" android:layout_width="44dp" android:layout_height="44dp" android:layout_marginEnd="8dp"/>
+                <View android:id="@+id/btnFg4" android:layout_width="44dp" android:layout_height="44dp"/>
+            </LinearLayout>
+
+            <!-- BG colors -->
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="BACKGROUND" android:textColor="@color/text_hint" android:textSize="10sp" android:layout_marginBottom="4dp"/>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:layout_marginBottom="16dp">
+                <View android:id="@+id/btnBg1" android:layout_width="44dp" android:layout_height="44dp" android:layout_marginEnd="8dp"/>
+                <View android:id="@+id/btnBg2" android:layout_width="44dp" android:layout_height="44dp" android:layout_marginEnd="8dp"/>
+                <View android:id="@+id/btnBg3" android:layout_width="44dp" android:layout_height="44dp" android:layout_marginEnd="8dp"/>
+                <View android:id="@+id/btnBg4" android:layout_width="44dp" android:layout_height="44dp"/>
+            </LinearLayout>
+
+            <Button android:id="@+id/btnGenerate" android:layout_width="match_parent" android:layout_height="52dp"
+                android:background="@color/primary" android:text="GENERATE QR CODE"
+                android:textColor="@color/white" android:textStyle="bold" android:layout_marginBottom="16dp"/>
+
+            <!-- QR Result -->
+            <LinearLayout android:id="@+id/layoutQrResult" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="vertical"
+                android:gravity="center_horizontal" android:visibility="gone">
+                <ImageView android:id="@+id/ivQr" android:layout_width="280dp" android:layout_height="280dp"
+                    android:layout_marginBottom="16dp"/>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button android:id="@+id/btnSaveQr" android:layout_width="0dp" android:layout_height="48dp"
+                        android:layout_weight="1" android:background="@color/surface"
+                        android:text="Save" android:textColor="@color/accent" android:layout_marginEnd="8dp"/>
+                    <Button android:id="@+id/btnShareQr" android:layout_width="0dp" android:layout_height="48dp"
+                        android:layout_weight="1" android:background="@color/primary"
+                        android:text="Share" android:textColor="@color/white"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Developed by Mukesh Kumar" android:textColor="@color/text_hint"
+                android:textSize="10sp" android:gravity="center" android:layout_marginTop="24dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Scan Layout -->
+    <ScrollView android:id="@+id/layoutScan" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:visibility="gone">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
+
+            <Button android:id="@+id/btnScan" android:layout_width="200dp" android:layout_height="60dp"
+                android:background="@color/primary" android:text="📷 SCAN QR / BARCODE"
+                android:textColor="@color/white" android:textStyle="bold" android:layout_marginBottom="24dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="SCAN RESULT" android:textColor="@color/text_hint" android:textSize="11sp"
+                android:layout_marginBottom="8dp"/>
+            <TextView android:id="@+id/tvScanResult" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="Scan a QR code to see results" android:textColor="@color/text_primary"
+                android:textSize="16sp" android:background="@color/surface" android:padding="16dp"
+                android:minHeight="80dp" android:layout_marginBottom="8dp"/>
+            <TextView android:id="@+id/tvScanFormat" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textColor="@color/accent" android:textSize="11sp" android:layout_marginBottom="16dp"/>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button android:id="@+id/btnCopy" android:layout_width="0dp" android:layout_height="48dp"
+                    android:layout_weight="1" android:background="@color/surface"
+                    android:text="Copy" android:textColor="@color/accent" android:layout_marginEnd="8dp"/>
+                <Button android:id="@+id/btnOpenUrl" android:layout_width="0dp" android:layout_height="48dp"
+                    android:layout_weight="1" android:background="@color/primary"
+                    android:text="Open URL" android:textColor="@color/white" android:visibility="gone"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

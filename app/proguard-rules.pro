@@ -1,0 +1,3 @@
+-keep class com.mukesh.qrcode.** { *; }
+-keep class com.google.zxing.** { *; }
+-keep class com.journeyapps.** { *; }

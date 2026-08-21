@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- QR code pattern simplified -->
+    <path android:fillColor="#00C853" android:pathData="M24,24 L48,24 L48,48 L24,48 Z M28,28 L28,44 L44,44 L44,28 Z"/>
+    <path android:fillColor="#00C853" android:pathData="M32,32 L40,32 L40,40 L32,40 Z"/>
+    <path android:fillColor="#00C853" android:pathData="M60,24 L84,24 L84,48 L60,48 Z M64,28 L64,44 L80,44 L80,28 Z"/>
+    <path android:fillColor="#00C853" android:pathData="M68,32 L76,32 L76,40 L68,40 Z"/>
+    <path android:fillColor="#00C853" android:pathData="M24,60 L48,60 L48,84 L24,84 Z M28,64 L28,80 L44,80 L44,64 Z"/>
+    <path android:fillColor="#00C853" android:pathData="M32,68 L40,68 L40,76 L32,76 Z"/>
+    <!-- Data bits -->
+    <path android:fillColor="#69F0AE" android:pathData="M60,60 L66,60 L66,66 L60,66 Z M72,60 L78,60 L78,66 L72,66 Z M60,72 L66,72 L66,78 L60,78 Z M72,72 L84,72 L84,84 L72,84 Z"/>
+</vector>
