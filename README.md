@@ -2,6 +2,7 @@
 
 **A native Android QR code generator and scanner — customizable colors, save/share, and camera-based scanning via ZXing.**
 
+[![CI](https://github.com/mukeshkumar356/qr-code-pro/actions/workflows/android-ci.yml/badge.svg)](https://github.com/mukeshkumar356/qr-code-pro/actions/workflows/android-ci.yml)
 [![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](#)
 [![Language](https://img.shields.io/badge/language-Kotlin-7F52FF?logo=kotlin&logoColor=white)](#)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
