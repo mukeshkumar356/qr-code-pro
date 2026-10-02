@@ -156,12 +156,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        // parseActivityResult returns a non-null IntentResult even when the
+        // user cancels the scan (contents is just null in that case), so
+        // checking "result != null" alone wrongly overwrote the scan box
+        // with "No result" on every cancel instead of leaving it untouched.
         if (result != null) {
-            val text = result.contents ?: "No result"
-            b.tvScanResult.text = text
-            b.tvScanFormat.text = result.formatName ?: ""
-            val isUrl = text.startsWith("http://") || text.startsWith("https://")
-            b.btnOpenUrl.visibility = if (isUrl) View.VISIBLE else View.GONE
+            val text = result.contents
+            if (text != null) {
+                b.tvScanResult.text = text
+                b.tvScanFormat.text = result.formatName ?: ""
+                val isUrl = text.startsWith("http://") || text.startsWith("https://")
+                b.btnOpenUrl.visibility = if (isUrl) View.VISIBLE else View.GONE
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
