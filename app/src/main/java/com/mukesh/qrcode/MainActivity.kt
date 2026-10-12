@@ -113,12 +113,16 @@ class MainActivity : AppCompatActivity() {
         try {
             val hints = mapOf(EncodeHintType.MARGIN to 1)
             val matrix = MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, qrSize, qrSize, hints)
-            val bmp = Bitmap.createBitmap(qrSize, qrSize, Bitmap.Config.RGB_565)
-            for (x in 0 until qrSize) {
-                for (y in 0 until qrSize) {
-                    bmp.setPixel(x, y, if (matrix[x, y]) qrFgColor else qrBgColor)
+            // RGB_565 quantizes colors (the chosen foreground/background shades
+            // get altered in the saved/shared PNG), so use ARGB_8888 and write
+            // all pixels in one call instead of ~262k setPixel() calls.
+            val pixels = IntArray(qrSize * qrSize)
+            for (y in 0 until qrSize) {
+                for (x in 0 until qrSize) {
+                    pixels[y * qrSize + x] = if (matrix[x, y]) qrFgColor else qrBgColor
                 }
             }
+            val bmp = Bitmap.createBitmap(pixels, qrSize, qrSize, Bitmap.Config.ARGB_8888)
             qrBitmap = bmp
             b.ivQr.setImageBitmap(bmp)
             b.layoutQrResult.visibility = View.VISIBLE
