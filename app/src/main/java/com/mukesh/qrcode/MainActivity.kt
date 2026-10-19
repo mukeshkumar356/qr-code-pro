@@ -20,6 +20,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.mukesh.qrcode.databinding.ActivityMainBinding
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -140,7 +141,13 @@ class MainActivity : AppCompatActivity() {
         val bmp = qrBitmap ?: return
         val dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES) ?: return
         val file = File(dir, "QR_${System.currentTimeMillis()}.png")
-        FileOutputStream(file).use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        try {
+            FileOutputStream(file).use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        } catch (e: IOException) {
+            // e.g. storage full or unavailable; don't crash the app
+            Toast.makeText(this, "Failed to save QR", Toast.LENGTH_SHORT).show()
+            return
+        }
         Toast.makeText(this, "Saved to ${file.absolutePath}", Toast.LENGTH_LONG).show()
     }
 
@@ -148,7 +155,12 @@ class MainActivity : AppCompatActivity() {
         val bmp = qrBitmap ?: return
         val dir = cacheDir
         val file = File(dir, "qr_share.png")
-        FileOutputStream(file).use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        try {
+            FileOutputStream(file).use { bmp.compress(Bitmap.CompressFormat.PNG, 100, it) }
+        } catch (e: IOException) {
+            Toast.makeText(this, "Failed to share QR", Toast.LENGTH_SHORT).show()
+            return
+        }
         val uri = FileProvider.getUriForFile(this, "${packageName}.provider", file)
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "image/png"
