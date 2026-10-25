@@ -1,5 +1,6 @@
 package com.mukesh.qrcode
 
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
@@ -86,7 +87,12 @@ class MainActivity : AppCompatActivity() {
         b.btnOpenUrl.setOnClickListener {
             val text = b.tvScanResult.text.toString()
             if (text.startsWith("http://") || text.startsWith("https://")) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(text)))
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(text)))
+                } catch (e: ActivityNotFoundException) {
+                    // no browser installed/enabled on the device; don't crash
+                    Toast.makeText(this, "No app found to open this link", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Toast.makeText(this, "Not a URL", Toast.LENGTH_SHORT).show()
             }
