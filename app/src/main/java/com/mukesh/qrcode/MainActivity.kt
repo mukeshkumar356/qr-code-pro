@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
         b.btnOpenUrl.setOnClickListener {
             val text = b.tvScanResult.text.toString()
-            if (text.startsWith("http://") || text.startsWith("https://")) {
+            if (isWebUrl(text)) {
                 try {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(text)))
                 } catch (e: ActivityNotFoundException) {
@@ -98,6 +98,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    // URL schemes are case-insensitive (RFC 3986), so QR codes encoding
+    // "HTTPS://..." must still be treated as links.
+    private fun isWebUrl(text: String): Boolean =
+        text.startsWith("http://", ignoreCase = true) || text.startsWith("https://", ignoreCase = true)
 
     private fun setupTabs() {
         b.btnTabGenerate.setOnClickListener {
@@ -187,8 +192,7 @@ class MainActivity : AppCompatActivity() {
             if (text != null) {
                 b.tvScanResult.text = text
                 b.tvScanFormat.text = result.formatName ?: ""
-                val isUrl = text.startsWith("http://") || text.startsWith("https://")
-                b.btnOpenUrl.visibility = if (isUrl) View.VISIBLE else View.GONE
+                b.btnOpenUrl.visibility = if (isWebUrl(text)) View.VISIBLE else View.GONE
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
