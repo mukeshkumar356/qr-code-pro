@@ -48,6 +48,20 @@ class MainActivity : AppCompatActivity() {
             generateQR(text)
         }
 
+        if (savedInstanceState != null) {
+            // Rotation/process recreation: restore the chosen colors and
+            // rebuild the QR (the Bitmap itself isn't saved), plus the
+            // scan result, which would otherwise reset to its placeholder.
+            qrFgColor = savedInstanceState.getInt(STATE_FG, qrFgColor)
+            qrBgColor = savedInstanceState.getInt(STATE_BG, qrBgColor)
+            if (savedInstanceState.getBoolean(STATE_QR_SHOWN)) regenerateFromInput()
+            savedInstanceState.getString(STATE_SCAN_TEXT)?.let { text ->
+                b.tvScanResult.text = text
+                b.tvScanFormat.text = savedInstanceState.getString(STATE_SCAN_FORMAT, "")
+                b.btnOpenUrl.visibility = if (isWebUrl(text)) View.VISIBLE else View.GONE
+            }
+        }
+
         b.btnSaveQr.setOnClickListener { saveQrToFile() }
         b.btnShareQr.setOnClickListener { shareQr() }
 
@@ -144,8 +158,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun regenerate() {
+        if (qrBitmap != null) regenerateFromInput()
+    }
+
+    private fun regenerateFromInput() {
         val text = b.etQrInput.text.toString().trim()
-        if (text.isNotEmpty() && qrBitmap != null) generateQR(text)
+        if (text.isNotEmpty()) generateQR(text)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(STATE_FG, qrFgColor)
+        outState.putInt(STATE_BG, qrBgColor)
+        outState.putBoolean(STATE_QR_SHOWN, qrBitmap != null)
+        if (b.btnOpenUrl.visibility == View.VISIBLE || b.tvScanFormat.text.isNotEmpty()) {
+            outState.putString(STATE_SCAN_TEXT, b.tvScanResult.text.toString())
+            outState.putString(STATE_SCAN_FORMAT, b.tvScanFormat.text.toString())
+        }
+    }
+
+    companion object {
+        private const val STATE_FG = "qr_fg"
+        private const val STATE_BG = "qr_bg"
+        private const val STATE_QR_SHOWN = "qr_shown"
+        private const val STATE_SCAN_TEXT = "scan_text"
+        private const val STATE_SCAN_FORMAT = "scan_format"
     }
 
     private fun saveQrToFile() {
