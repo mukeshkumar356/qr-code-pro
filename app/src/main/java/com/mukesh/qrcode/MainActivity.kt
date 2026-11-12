@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
     private var qrFgColor = Color.BLACK
     private var qrBgColor = Color.WHITE
     private var qrSize = 512
+    // Last scanned contents; null until a scan succeeds. Tracked explicitly so
+    // we don't infer "has a result" from view state or the placeholder text.
+    private var scanText: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             qrBgColor = savedInstanceState.getInt(STATE_BG, qrBgColor)
             if (savedInstanceState.getBoolean(STATE_QR_SHOWN)) regenerateFromInput()
             savedInstanceState.getString(STATE_SCAN_TEXT)?.let { text ->
+                scanText = text
                 b.tvScanResult.text = text
                 b.tvScanFormat.text = savedInstanceState.getString(STATE_SCAN_FORMAT, "")
                 b.btnOpenUrl.visibility = if (isWebUrl(text)) View.VISIBLE else View.GONE
@@ -90,8 +94,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         b.btnCopy.setOnClickListener {
-            val text = b.tvScanResult.text.toString()
-            if (text.isNotEmpty() && text != "Scan a QR code to see results") {
+            val text = scanText
+            if (!text.isNullOrEmpty()) {
                 val cm = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 cm.setPrimaryClip(ClipData.newPlainText("QR Result", text))
                 Toast.makeText(this, "Copied!", Toast.LENGTH_SHORT).show()
@@ -99,8 +103,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         b.btnOpenUrl.setOnClickListener {
-            val text = b.tvScanResult.text.toString()
-            if (isWebUrl(text)) {
+            val text = scanText
+            if (text != null && isWebUrl(text)) {
                 try {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(text)))
                 } catch (e: ActivityNotFoundException) {
@@ -171,8 +175,8 @@ class MainActivity : AppCompatActivity() {
         outState.putInt(STATE_FG, qrFgColor)
         outState.putInt(STATE_BG, qrBgColor)
         outState.putBoolean(STATE_QR_SHOWN, qrBitmap != null)
-        if (b.btnOpenUrl.visibility == View.VISIBLE || b.tvScanFormat.text.isNotEmpty()) {
-            outState.putString(STATE_SCAN_TEXT, b.tvScanResult.text.toString())
+        scanText?.let { text ->
+            outState.putString(STATE_SCAN_TEXT, text)
             outState.putString(STATE_SCAN_FORMAT, b.tvScanFormat.text.toString())
         }
     }
@@ -227,6 +231,7 @@ class MainActivity : AppCompatActivity() {
         if (result != null) {
             val text = result.contents
             if (text != null) {
+                scanText = text
                 b.tvScanResult.text = text
                 b.tvScanFormat.text = result.formatName ?: ""
                 b.btnOpenUrl.visibility = if (isWebUrl(text)) View.VISIBLE else View.GONE
