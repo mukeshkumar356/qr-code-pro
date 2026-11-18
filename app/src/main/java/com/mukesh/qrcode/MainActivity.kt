@@ -52,12 +52,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState != null) {
-            // Rotation/process recreation: restore the chosen colors and
-            // rebuild the QR (the Bitmap itself isn't saved), plus the
+            // Rotation/process recreation: restore the chosen colors and the
             // scan result, which would otherwise reset to its placeholder.
+            // The QR itself is rebuilt in onRestoreInstanceState(), because
+            // the EditText's text is only restored by the framework after
+            // onCreate() returns, so it is still empty here.
             qrFgColor = savedInstanceState.getInt(STATE_FG, qrFgColor)
             qrBgColor = savedInstanceState.getInt(STATE_BG, qrBgColor)
-            if (savedInstanceState.getBoolean(STATE_QR_SHOWN)) regenerateFromInput()
             savedInstanceState.getString(STATE_SCAN_TEXT)?.let { text ->
                 scanText = text
                 b.tvScanResult.text = text
@@ -168,6 +169,13 @@ class MainActivity : AppCompatActivity() {
     private fun regenerateFromInput() {
         val text = b.etQrInput.text.toString().trim()
         if (text.isNotEmpty()) generateQR(text)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // Now the input text has been restored, so the QR (whose Bitmap isn't
+        // saved) can be rebuilt from it.
+        if (savedInstanceState.getBoolean(STATE_QR_SHOWN)) regenerateFromInput()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
