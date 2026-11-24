@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     // Last scanned contents; null until a scan succeeds. Tracked explicitly so
     // we don't infer "has a result" from view state or the placeholder text.
     private var scanText: String? = null
+    // Which tab is showing, so rotation doesn't bounce the user back to Generate.
+    private var scanTabShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,7 @@ class MainActivity : AppCompatActivity() {
             // onCreate() returns, so it is still empty here.
             qrFgColor = savedInstanceState.getInt(STATE_FG, qrFgColor)
             qrBgColor = savedInstanceState.getInt(STATE_BG, qrBgColor)
+            if (savedInstanceState.getBoolean(STATE_SCAN_TAB)) showTab(scan = true)
             savedInstanceState.getString(STATE_SCAN_TEXT)?.let { text ->
                 scanText = text
                 b.tvScanResult.text = text
@@ -124,20 +127,17 @@ class MainActivity : AppCompatActivity() {
         text.startsWith("http://", ignoreCase = true) || text.startsWith("https://", ignoreCase = true)
 
     private fun setupTabs() {
-        b.btnTabGenerate.setOnClickListener {
-            b.layoutGenerate.visibility = View.VISIBLE
-            b.layoutScan.visibility = View.GONE
-            b.btnTabGenerate.alpha = 1f
-            b.btnTabScan.alpha = 0.5f
-        }
-        b.btnTabScan.setOnClickListener {
-            b.layoutGenerate.visibility = View.GONE
-            b.layoutScan.visibility = View.VISIBLE
-            b.btnTabGenerate.alpha = 0.5f
-            b.btnTabScan.alpha = 1f
-        }
-        b.btnTabGenerate.alpha = 1f
-        b.btnTabScan.alpha = 0.5f
+        b.btnTabGenerate.setOnClickListener { showTab(scan = false) }
+        b.btnTabScan.setOnClickListener { showTab(scan = true) }
+        showTab(scan = false)
+    }
+
+    private fun showTab(scan: Boolean) {
+        scanTabShown = scan
+        b.layoutGenerate.visibility = if (scan) View.GONE else View.VISIBLE
+        b.layoutScan.visibility = if (scan) View.VISIBLE else View.GONE
+        b.btnTabGenerate.alpha = if (scan) 0.5f else 1f
+        b.btnTabScan.alpha = if (scan) 1f else 0.5f
     }
 
     private fun generateQR(text: String) {
@@ -182,6 +182,7 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt(STATE_FG, qrFgColor)
         outState.putInt(STATE_BG, qrBgColor)
+        outState.putBoolean(STATE_SCAN_TAB, scanTabShown)
         outState.putBoolean(STATE_QR_SHOWN, qrBitmap != null)
         scanText?.let { text ->
             outState.putString(STATE_SCAN_TEXT, text)
@@ -192,6 +193,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val STATE_FG = "qr_fg"
         private const val STATE_BG = "qr_bg"
+        private const val STATE_SCAN_TAB = "scan_tab"
         private const val STATE_QR_SHOWN = "qr_shown"
         private const val STATE_SCAN_TEXT = "scan_text"
         private const val STATE_SCAN_FORMAT = "scan_format"
